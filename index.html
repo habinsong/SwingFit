@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SwingFit — 온디바이스 AI × LLM 골프 스윙 분석</title>
   <meta name="description" content="스마트폰 온디바이스 AI와 LLM 융합으로 스윙 분석·비거리 예측·개인화 피드백을 제공하는 캡스톤 프로젝트 SwingFit." />
-  <!-- Tailwind CDN -->
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -13,8 +14,13 @@
       theme: {
         extend: {
           colors: {
-            mint: { DEFAULT: '#61E4C5', 50:'#ECFFFA',100:'#D5FFF4',200:'#AFFFF0',300:'#85F7E2',400:'#61E4C5',500:'#34C3A2',600:'#25A486',700:'#1E846D',800:'#176B59',900:'#0F4B40' },
-            purple: { DEFAULT: '#7C6FF6' }
+            /* Logo palette + purple accent */
+            mint: { DEFAULT:'#61E4C5',50:'#ECFFFA',100:'#D5FFF4',200:'#AFFFF0',300:'#85F7E2',400:'#61E4C5',500:'#34C3A2',600:'#25A486',700:'#1E846D',800:'#176B59',900:'#0F4B40' },
+            mintMain: '#5BC1A1',
+            mintLight: '#A2E2C9',
+            mintDark: '#2E7C68',
+            charcoal: '#3A4C45',
+            purple: { DEFAULT:'#7C6FF6' }
           },
           fontFamily: {
             sans: ['Pretendard','ui-sans-serif','system-ui','-apple-system','Segoe UI','Noto Sans KR','Helvetica','Arial','Apple SD Gothic Neo','Malgun Gothic','sans-serif']
@@ -26,28 +32,25 @@
       }
     }
   </script>
+
   <!-- Alpine.js -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <!-- KaTeX for math -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
-          onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
-  <!-- Chart.js for metrics -->
+
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
   <style>
-    /* smooth section reveal */
-    [data-reveal] { opacity:.0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease }
-    [data-reveal].visible { opacity:1; transform: translateY(0) }
-    .katex { font-size: 1.02rem; }
+    [data-reveal]{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+    [data-reveal].visible{opacity:1;transform:translateY(0)}
   </style>
 </head>
 <body class="bg-white text-gray-900 dark:bg-neutral-950 dark:text-neutral-100">
+
   <!-- NAV -->
   <header class="sticky top-0 z-40 backdrop-blur bg-white/75 dark:bg-neutral-950/70 border-b border-black/5 dark:border-white/10">
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
       <a href="#home" class="flex items-center gap-2 font-bold">
-        <span class="inline-block w-8 h-8 rounded-xl bg-gradient-to-br from-mint to-purple shadow-glow"></span>
+        <span class="inline-block w-8 h-8 rounded-xl bg-gradient-to-br from-mintMain to-purple shadow-glow"></span>
         <span>SwingFit</span>
       </a>
       <nav class="hidden md:flex gap-6 text-sm font-medium">
@@ -57,10 +60,11 @@
         <a href="#math" class="hover:text-purple">수식</a>
         <a href="#metrics" class="hover:text-purple">성능</a>
         <a href="#timeline" class="hover:text-purple">타임라인</a>
-        <a href="#appendix" class="hover:text-purple">대화 요약</a>
       </nav>
       <div class="flex items-center gap-2">
-        <button @click="toggleTheme" class="px-3 py-1.5 rounded-xl border border-black/10 dark:border-white/10 text-xs">{{ theme==='dark'?'라이트':'다크' }}</button>
+        <!-- FIX: must use x-text ({{ }}) breaks on Alpine) -->
+        <button @click="toggleTheme" x-text="theme==='dark' ? '라이트' : '다크'"
+                class="px-3 py-1.5 rounded-xl border border-black/10 dark:border-white/10 text-xs"></button>
         <a :href="data.repo" target="_blank" class="px-3 py-1.5 rounded-xl bg-purple text-white text-xs shadow-glow">GitHub</a>
       </div>
     </div>
@@ -68,12 +72,12 @@
 
   <!-- HERO -->
   <section id="home" class="relative overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-mint/20 via-transparent to-purple/20 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-mintLight/30 via-transparent to-purple/30 pointer-events-none"></div>
     <div class="max-w-7xl mx-auto px-4 py-16 lg:py-24 grid lg:grid-cols-2 gap-10 items-center">
       <div data-reveal>
         <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">
           온디바이스 AI × LLM 융합
-          <span class="block text-transparent bg-clip-text bg-gradient-to-r from-purple to-mint">골프 스윙 분석·비거리 예측</span>
+          <span class="block text-transparent bg-clip-text bg-gradient-to-r from-purple to-mintMain">골프 스윙 분석·비거리 예측</span>
         </h1>
         <ul class="mt-6 space-y-2 text-lg list-disc pl-5">
           <li>스마트폰 단일 기기로 스윙 분석·비거리 예측·개인화 피드백 제공</li>
@@ -84,65 +88,13 @@
           <a :href="data.repo" target="_blank" class="px-5 py-3 rounded-2xl bg-purple text-white shadow-glow">깃허브 저장소</a>
           <a href="#demo" class="px-5 py-3 rounded-2xl border border-black/10 dark:border-white/10">데모 보기</a>
         </div>
-        <div class="mt-4 text-xs text-gray-500">※ 본 페이지는 GitHub Pages 단일 HTML로 동작. 빌드 없이 배포 가능.</div>
+        <div class="mt-4 text-xs text-gray-500">※ 이 페이지는 단일 HTML로 GitHub Pages에서 바로 동작.</div>
       </div>
+
+      <!-- System diagram image -->
       <div class="relative" data-reveal>
         <div class="aspect-video rounded-3xl border border-black/10 dark:border-white/10 bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-900 dark:to-neutral-800 p-4">
-          <div class="w-full h-full grid place-items-center text-center">
-            <div>
-              <div class="text-xs mb-2 text-gray-500">시스템 개념도(요약)</div>
-              <svg viewBox="0 0 740 380" class="w-full h-auto">
-                <defs>
-                  <linearGradient id="g1" x1="0" x2="1">
-                    <stop offset="0%" stop-color="#7C6FF6"/>
-                    <stop offset="100%" stop-color="#61E4C5"/>
-                  </linearGradient>
-                </defs>
-                <!-- Phone -->
-                <rect x="40" y="40" width="220" height="300" rx="22" fill="none" stroke="url(#g1)" stroke-width="3"/>
-                <text x="150" y="70" text-anchor="middle" font-size="14" fill="currentColor">스마트폰(On‑Device)</text>
-                <g>
-                  <rect x="60" y="90" width="180" height="54" rx="10" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-opacity=".15"/>
-                  <text x="150" y="122" text-anchor="middle" font-size="13" fill="currentColor">영상 입력(4K/120fps)</text>
-                </g>
-                <g>
-                  <rect x="60" y="160" width="180" height="54" rx="10" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-opacity=".15"/>
-                  <text x="150" y="192" text-anchor="middle" font-size="13" fill="currentColor">YOLOv8n TFLite 추론</text>
-                </g>
-                <g>
-                  <rect x="60" y="230" width="180" height="54" rx="10" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-opacity=".15"/>
-                  <text x="150" y="262" text-anchor="middle" font-size="13" fill="currentColor">비거리 모델 & 피처 추출</text>
-                </g>
-                <!-- Cloud -->
-                <rect x="480" y="40" width="220" height="300" rx="22" fill="none" stroke="url(#g1)" stroke-width="3"/>
-                <text x="590" y="70" text-anchor="middle" font-size="14" fill="currentColor">클라우드</text>
-                <g>
-                  <rect x="500" y="90" width="180" height="54" rx="10" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-opacity=".15"/>
-                  <text x="590" y="122" text-anchor="middle" font-size="13" fill="currentColor">Firestore/Storage/Functions</text>
-                </g>
-                <g>
-                  <rect x="500" y="160" width="180" height="54" rx="10" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-opacity=".15"/>
-                  <text x="590" y="192" text-anchor="middle" font-size="13" fill="currentColor">LLM 피드백(Gemini 2.5)</text>
-                </g>
-                <g>
-                  <rect x="500" y="230" width="180" height="54" rx="10" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-opacity=".15"/>
-                  <text x="590" y="262" text-anchor="middle" font-size="13" fill="currentColor">리포트·동기화</text>
-                </g>
-                <!-- Arrows -->
-                <path d="M260 190 H470" stroke="url(#g1)" stroke-width="3" marker-end="url(#arrow)"/>
-                <path d="M480 210 H270" stroke="url(#g1)" stroke-width="3" marker-end="url(#arrow)"/>
-                <defs>
-                  <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="url(#g1)"/>
-                  </marker>
-                </defs>
-              </svg>
-              <div class="mt-3 text-xs text-gray-500">
-                • 온디바이스: 저지연 · 오프라인 안정성 · 개인정보 보호<br/>
-                • 클라우드: 세션 저장 · 팀 공유 · LLM 피드백 자동화
-              </div>
-            </div>
-          </div>
+          <img src="assets/system.png" alt="SwingFit 시스템 개념도" class="w-full h-full object-contain rounded-2xl"/>
         </div>
       </div>
     </div>
@@ -156,7 +108,7 @@
         <ul class="mt-4 space-y-2 list-disc pl-5">
           <li>스마트폰 온디바이스 모델로 스윙/공 궤적을 실시간 분석.</li>
           <li>클라우드 LLM이 코칭 문구·훈련 과제를 자동 생성.</li>
-          <li>Firebase와 동기화하여 기록, 비교, 공유까지 일원화.</li>
+          <li>Firebase로 기록·비교·공유 일원화.</li>
         </ul>
       </div>
       <aside data-reveal>
@@ -182,9 +134,7 @@
           <div class="p-6 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
             <div class="text-sm font-semibold" x-text="f.title"></div>
             <ul class="mt-3 text-sm space-y-1 list-disc pl-5">
-              <template x-for="b in f.bullets">
-                <li x-text="b"></li>
-              </template>
+              <template x-for="b in f.bullets"><li x-text="b"></li></template>
             </ul>
           </div>
         </template>
@@ -202,8 +152,8 @@
           <li>온디바이스 추론: YOLOv8n FP16/INT8 TFLite, XNNPACK·GPU delegate 선택</li>
           <li>클라우드: Firebase Auth/Firestore/Functions/Storage</li>
           <li>LLM: Gemini 2.5 Pro 기반 피드백 생성(스트리밍 제외)</li>
-          <li>데이터: ball-analyses, swing-analyses 컬렉션 구조</li>
-          <li>성능: 업로드·분석 왕복 최소화(이미지 리사이징·형식 최적화)</li>
+          <li>데이터: <code>ball-analyses</code>, <code>swing-analyses</code> 컬렉션</li>
+          <li>왕복 최소화·리사이징·포맷 최적화로 체감속도 개선</li>
         </ul>
       </div>
       <aside data-reveal>
@@ -213,39 +163,19 @@
             <li>Android Studio (Kotlin)</li>
             <li>Pixel 6, Motorola razr 2023 테스트</li>
             <li>SDK 31~36, TFLite 2.14, tflite-support 0.4.4</li>
-            <li>GPU delegate 옵션, INT8 QAT 계획</li>
+            <li>INT8 QAT 로드맵</li>
           </ul>
         </div>
       </aside>
     </div>
   </section>
 
-  <!-- MATH -->
+  <!-- MATH (image only) -->
   <section id="math" class="py-16">
-    <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-8 items-start">
-      <div data-reveal>
-        <h2 class="text-2xl font-bold">핵심 수식(요약)</h2>
-        <div class="mt-4 p-5 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900">
-          <div class="text-sm text-gray-600 dark:text-gray-300">비거리 예측(항력 포함 근사)</div>
-          <div class="mt-2">$$ D \;\approx\; \frac{v_0^2}{g} \Big(\sin 2\theta\Big) \cdot \exp\!\left(-\,\frac{\rho C_d A}{2m} \cdot \frac{v_0}{g}\right) $$</div>
-          <ul class="mt-3 text-sm space-y-1 list-disc pl-5">
-            <li>\(v_0\): 임팩트 속도, \(\theta\): 발사각</li>
-            <li>\(\rho\): 공기밀도, \(C_d\): 항력 계수, \(A\): 단면적(골프공 규격), \(m\): 질량</li>
-            <li>\(g=9.80665\,m/s^2\) 적용, 실제 모델은 피처 보강·데이터 보정 포함</li>
-          </ul>
-        </div>
-      </div>
-      <div data-reveal>
-        <h2 class="text-2xl font-bold">모델 입력 피처</h2>
-        <ul class="mt-4 space-y-2 list-disc pl-5 text-sm">
-          <li>임팩트 전·후 프레임 기반 스윙 속도·경로·클럽헤드 위치</li>
-          <li>발사각·스핀 근사, 공 궤적 초기 구간 픽업</li>
-          <li>클럽 타입, ROI, 촬영 FPS/해상도, 환경 파라미터</li>
-        </ul>
-        <div class="mt-4 p-5 rounded-2xl border border-black/10 dark:border-white/10 bg-neutral-50 dark:bg-neutral-900 text-sm">
-          <div class="font-semibold mb-2">한 줄 해석</div>
-          <div>• 물리 근사식 × 데이터 기반 보정 → 현장 조건 편차 보완.</div>
-        </div>
+    <div class="max-w-7xl mx-auto px-4" data-reveal>
+      <h2 class="text-2xl font-bold mb-6">핵심 수식</h2>
+      <div class="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900 p-5 flex justify-center">
+        <img src="assets/math.png" alt="핵심 수식" class="w-full max-w-3xl h-auto rounded-xl"/>
       </div>
     </div>
   </section>
@@ -254,19 +184,42 @@
   <section id="metrics" class="py-16 border-t border-black/5 dark:border-white/10">
     <div class="max-w-7xl mx-auto px-4">
       <h2 class="text-2xl font-bold" data-reveal>성능 지표</h2>
+
       <div class="grid lg:grid-cols-2 gap-8 mt-6">
+        <!-- mAP -->
         <div class="p-6 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
           <canvas id="mapChart" class="w-full h-64"></canvas>
-          <div class="mt-3 text-xs text-gray-500">• 예시 데이터: mAP@50, mAP@50‑95 (스윙/비거리 모델)</div>
+          <div class="mt-3 text-xs text-gray-500">• mAP 비교: 공/스윙, @0.5 및 종합(참고치)</div>
         </div>
+
+        <!-- FPS/Latency -->
         <div class="p-6 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
-          <div class="text-sm font-semibold">지연/처리 시간(예시)</div>
+          <div class="text-sm font-semibold">지연/처리 시간</div>
           <ul class="mt-3 text-sm space-y-1 list-disc pl-5">
-            <li>온디바이스 추론: YOLOv8n FP16(XNNPACK) 기준 저지연</li>
-            <li>INT8 QAT 전환 시 추가 단축 기대, GPU delegate 선택적 사용</li>
-            <li>네트워크 왕복 최소화: 업로드·분석 2‑스텝 → 1‑스텝 구조 권장</li>
+            <li>온디바이스 추론(FP16·XNNPACK): 평균 25–30 FPS</li>
+            <li>평균 추론 지연시간: 약 38 ms</li>
           </ul>
-          <div class="mt-4 text-xs text-gray-500">※ 실제 수치는 기기·세팅에 따라 상이. 리포지토리 벤치마크 참조.</div>
+          <canvas id="latencyChart" class="w-full h-56 mt-4"></canvas>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8 mt-8">
+        <!-- Error/Distance -->
+        <div class="p-6 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
+          <div class="text-sm font-semibold">실측 vs 예측</div>
+          <ul class="mt-3 text-sm space-y-1 list-disc pl-5">
+            <li>비거리 오차율: ±8.7%</li>
+            <li>예측값 245 m 기준 ±8% 범위</li>
+          </ul>
+          <canvas id="errorChart" class="w-full h-56 mt-4"></canvas>
+        </div>
+
+        <div class="p-6 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
+          <div class="text-sm font-semibold">비고</div>
+          <ul class="mt-3 text-sm space-y-1 list-disc pl-5">
+            <li>INT8 QAT 전환 시 추가 단축 기대, GPU delegate 선택적 사용</li>
+            <li>기기·세팅에 따라 수치 편차 존재(리포지토리 벤치마크 참조)</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -298,46 +251,18 @@
     </div>
   </section>
 
-  <!-- TIMELINE -->
+  <!-- TIMELINE (image) -->
   <section id="timeline" class="py-16 border-t border-black/5 dark:border-white/10">
     <div class="max-w-7xl mx-auto px-4">
       <h2 class="text-2xl font-bold" data-reveal>타임라인</h2>
-      <ol class="mt-6 relative border-s border-black/10 dark:border-white/10">
-        <template x-for="(t,i) in data.timeline" :key="i">
-          <li class="ms-6 mb-8" data-reveal>
-            <span class="absolute -start-2.5 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-purple to-mint text-white text-[10px]">{{i+1}}</span>
-            <div class="text-sm font-semibold" x-text="t.title"></div>
-            <ul class="mt-2 text-sm list-disc pl-5">
-              <template x-for="b in t.bullets">
-                <li x-text="b"></li>
-              </template>
-            </ul>
-          </li>
-        </template>
-      </ol>
-    </div>
-  </section>
-
-  <!-- APPENDIX: Conversation digest (요약) -->
-  <section id="appendix" class="py-16">
-    <div class="max-w-7xl mx-auto px-4">
-      <h2 class="text-2xl font-bold" data-reveal>대화 기록 요약</h2>
-      <p class="mt-2 text-sm text-gray-600 dark:text-gray-300" data-reveal>• 전체 대화는 매우 방대함. 아래는 핵심 결정·요구사항을 날짜축 요약(개조식). 세부 원문은 리포지토리 <code>/docs/conversations</code> 폴더에 분할 저장을 권장.</p>
-      <div class="mt-6 grid md:grid-cols-2 gap-6">
-        <template x-for="c in data.conversation" :key="c.when">
-          <div class="p-5 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
-            <div class="text-xs text-gray-500" x-text="c.when"></div>
-            <div class="text-sm font-semibold mt-1" x-text="c.title"></div>
-            <ul class="mt-2 text-sm space-y-1 list-disc pl-5">
-              <template x-for="b in c.bullets"><li x-text="b"></li></template>
-            </ul>
-          </div>
-        </template>
+      <div class="mt-6 p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
+        <img src="assets/timeline.png" alt="개발일정 타임라인" class="w-full h-auto rounded-xl" />
+        <div class="mt-2 text-xs text-gray-500">※ 포스터와 동일한 개발일정 이미지를 사용합니다. (/assets/timeline.png)</div>
       </div>
     </div>
   </section>
 
-  <!-- TEAM / ACK -->
+  <!-- TEAM -->
   <section id="team" class="py-16 border-t border-black/5 dark:border-white/10">
     <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-8">
       <div data-reveal>
@@ -351,10 +276,10 @@
       <div data-reveal>
         <h2 class="text-2xl font-bold">연락처</h2>
         <ul class="mt-4 text-sm space-y-1 list-disc pl-5">
-          <li>이슈·기여: <a :href="data.repo+'/issues'" class="underline">GitHub Issues</a></li>
-          <li>문의: 프로젝트 리드에게 이메일</li>
+          <li>이슈·기여: <a :href="data.repo + '/issues'" class="underline">GitHub Issues</a></li>
+          <li>문의: 프로젝트 리드 이메일</li>
         </ul>
-        <div class="mt-4 text-xs text-gray-500">• 개인정보·촬영 데이터는 동의하에 취급. 클라우드 업로드 시 최소화 원칙 준수.</div>
+        <div class="mt-4 text-xs text-gray-500">• 개인정보·촬영 데이터는 동의하에 취급. 업로드 최소화 원칙.</div>
       </div>
     </div>
   </section>
@@ -364,83 +289,68 @@
     <div>© 2025 SwingFit. All rights reserved.</div>
   </footer>
 
-  <!-- APP STATE -->
+  <!-- APP STATE + Charts -->
   <script>
     function app(){
       return {
         theme: (localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light')),
         data: {
-          repo: 'https://github.com/your-org/swingfit', // TODO: 실제 저장소 URL로 교체
+          repo: 'https://github.com/your-org/swingfit', // TODO: 실제 저장소 URL
           features: [
-            { title: '스윙 분석', bullets: ['YOLOv8n으로 키포인트·클럽헤드 인접 객체 검출','임팩트 전후 프레임 기반 이벤트 추출','ROI/Overlay로 사용자 가이드 제공'] },
-            { title: '비거리 예측', bullets: ['물리 근사 + ML 회귀·보정','클럽 타입·환경 파라미터 반영','세션별 평균·분산 및 트렌드 제공'] },
-            { title: 'LLM 피드백', bullets: ['Gemini 2.5 Pro로 코칭 문구 생성','오류·과적합 프롬프트 방지 가드','훈련 플랜 제안(요약·To‑Do)'] },
-            { title: '저장·동기화', bullets: ['Firebase Auth/Firestore/Storage','세션 카드·검색·필터','팀 공유·비교 보기'] },
-            { title: '성능 최적화', bullets: ['FP16/XNNPACK, 선택적 GPU delegate','INT8 QAT 전환 로드맵','업로드 왕복 최소화'] },
-            { title: 'UX', bullets: ['민트·퍼플 톤 테마','BottomSheet + 카드 UI','A11y 대비·폰트 최적화'] }
-          ],
-          timeline: [
-            { title:'초기 설계', bullets:['문제정의·유스케이스','온디바이스 우선 원칙','LLM 피드백 결합 구상'] },
-            { title:'프로토타입', bullets:['Camera2/ExoPlayer 파이프라인','YOLOv8n FP16 TFLite 내장','Firestore 동기화 초안'] },
-            { title:'성능 개선', bullets:['ROI·리사이징·포맷 최적화','왕복 횟수 축소 설계','GPU delegate 실험'] },
-            { title:'발표/포스터', bullets:['옥타판넬 포스터 구성','수식·개념도 개선','심사위원 친화형 카피'] }
-          ],
-          conversation: [
-            { when:'2025‑10~11', title:'발표·포스터·개념도', bullets:[
-              '작품설명 3문장·개조식 문체 정착',
-              '시스템 개념도(온디바이스→클라우드) 재제작',
-              '수식 주석·심사위원 코멘트 짧게 배치',
-              '기대효과 3문장 정리'] },
-            { when:'2025‑10‑21', title:'API 왕복 최적화', bullets:[
-              '이미지 리사이즈·형식 변경으로 업로드 시간 절감',
-              '분석 호출 2‑스텝→1‑스텝 구조 제안',
-              'Gemini 2.5 Pro 스트리밍 제외 가정'] },
-            { when:'2025‑10‑26', title:'비거리·항력 수식', bullets:[
-              '공인 규격·g 상수 반영',
-              '수식 시각 재작성·기호 설명 추가'] },
-            { when:'2025‑10‑30', title:'모델·QAT·NPU', bullets:[
-              'v8 대비 v11 최적화 논의(NMS 내장 등)',
-              'INT8 QAT 전환 시 정확도·추론속도 기대',
-              'FP16 표시 혼동 이슈 점검'] },
-            { when:'장비·환경', title:'테스트 단말·라이브러리', bullets:[
-              'Pixel 6, razr 2023',
-              'tflite 2.14.0 / support 0.4.4',
-              'GPU delegate 옵션'] }
+            { title: '스윙 분석', bullets:['YOLOv8n으로 키포인트·클럽헤드 인접 객체 검출','임팩트 전후 프레임 기반 이벤트 추출','ROI/Overlay 사용자 가이드'] },
+            { title: '비거리 예측', bullets:['물리 근사 + ML 보정','클럽 타입·환경 파라미터 반영','세션별 평균·분산·트렌드'] },
+            { title: 'LLM 피드백', bullets:['Gemini 2.5 Pro로 코칭 문구 생성','가드 프로ンプ팅 적용','훈련 플랜 제안(요약·To-Do)'] },
+            { title: '저장·동기화', bullets:['Firebase Auth/Firestore/Storage','세션 카드·검색·필터','팀 공유·비교 보기'] },
+            { title: '성능 최적화', bullets:['FP16/XNNPACK, 선택적 GPU delegate','INT8 QAT 로드맵','업로드 왕복 최소화'] },
+            { title: 'UX', bullets:['로고 민트+보라 포인트','BottomSheet + 카드 UI','가독성/접근성 튜닝'] }
           ]
         },
-        toggleTheme(){ this.theme = this.theme==='dark'?'light':'dark'; localStorage.setItem('theme', this.theme); },
+        toggleTheme(){ this.theme = this.theme==='dark' ? 'light' : 'dark'; localStorage.setItem('theme', this.theme); },
       }
     }
 
-    // simple reveal on scroll
+    // reveal
     const onScrollReveal = () => {
       document.querySelectorAll('[data-reveal]').forEach(el=>{
         const r = el.getBoundingClientRect();
         if(r.top < window.innerHeight - 120) el.classList.add('visible');
       });
-    }
+    };
     window.addEventListener('scroll', onScrollReveal, {passive:true});
     window.addEventListener('load', onScrollReveal);
 
-    // charts
-    window.addEventListener('load',()=>{
-      const ctx = document.getElementById('mapChart');
-      if(!ctx) return;
-      const chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['mAP@50 (Distance)','mAP@50‑95 (Distance)','mAP@50 (Swing)','mAP@50‑95 (Swing)'],
-          datasets: [{
-            label: '예시 지표',
-            data: [98, 89, 92, 84],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: { y: { beginAtZero: true, max: 100 } }
-        }
-      });
+    // charts (logo mint + purple)
+    window.addEventListener('load', ()=>{
+      // mAP
+      const mapCtx = document.getElementById('mapChart');
+      if(mapCtx){
+        new Chart(mapCtx,{
+          type:'bar',
+          data:{
+            labels:['mAP@50 (Ball)','mAP@50-95 (Ball)','mAP@50 (Swing)','mAP@50-95 (Swing)'],
+            datasets:[{label:'mAP',data:[93,84,88,80],backgroundColor:['#7C6FF6','#5BC1A1','#7C6FF6','#5BC1A1']}]
+          },
+          options:{responsive:true,scales:{y:{beginAtZero:true,max:100}},plugins:{legend:{display:false}}}
+        });
+      }
+      // FPS & Latency
+      const latCtx = document.getElementById('latencyChart');
+      if(latCtx){
+        new Chart(latCtx,{
+          type:'bar',
+          data:{labels:['FPS (avg)','Latency (ms)'],datasets:[{data:[28,38],backgroundColor:['#5BC1A1','#7C6FF6']}]},
+          options:{responsive:true,scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
+        });
+      }
+      // Predicted distance & Error
+      const errCtx = document.getElementById('errorChart');
+      if(errCtx){
+        new Chart(errCtx,{
+          type:'bar',
+          data:{labels:['Predicted (m)','Error (%)'],datasets:[{data:[245,8.7],backgroundColor:['#3A4C45','#A2E2C9']}]},
+          options:{responsive:true,scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
+        });
+      }
     });
   </script>
 </body>

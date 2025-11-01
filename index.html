@@ -49,8 +49,33 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <style>
+    /* reveal */
     [data-reveal]{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
     [data-reveal].visible{opacity:1;transform:translateY(0)}
+
+    /* seamless horizontal marquee (duplicate track) */
+    @keyframes marqueeX {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .marquee {
+      overflow: hidden;
+      width: 100%;
+      position: relative;
+    }
+    .marquee__track {
+      display: flex;
+      gap: 1rem; /* 16px */
+      width: max-content;
+      animation: marqueeX 25s linear infinite;
+    }
+    .marquee:hover .marquee__track { animation-play-state: paused; }
+    @media (prefers-reduced-motion: reduce) {
+      .marquee__track { animation: none; }
+    }
+    /* hide horizontal scrollbar (still scrollable) */
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
   </style>
 </head>
 <body class="bg-white text-gray-900 dark:bg-neutral-950 dark:text-neutral-100">
@@ -118,8 +143,8 @@
           <li>Firebase 동기화·클라우드 기반 사용자 맞춤 리포트</li>
         </ul>
         <div class="mt-7 flex flex-col sm:flex-row gap-3">
-          <a :href="data.repo" target="_blank" class="w-full sm:w-auto px-5 py-3 rounded-2xl bg-purple text-white text-center shadow-glow">깃허브 저장소</a>
-          <a href="#demo" class="w-full sm:w-auto px-5 py-3 rounded-2xl border border-black/10 dark:border-white/10 text-center">데모 보기</a>
+          <a href="#demo" class="w-full sm:w-auto px-5 py-3 rounded-2xl bg-purple text-white text-center shadow-glow">데모 보기</a>
+          <a :href="data.repo" target="_blank" class="w-full sm:w-auto px-5 py-3 rounded-2xl border border-black/10 dark:border-white/10 text-center">깃허브 저장소</a>
         </div>
       </div>
       <div class="relative" data-reveal>
@@ -315,63 +340,161 @@
     <div class="max-w-7xl mx-auto px-4">
       <h2 class="scroll-mt-20 text-2xl font-bold" data-reveal>성능 지표</h2>
 
-      <div class="grid lg:grid-cols-2 gap-8 mt-6">
-        <!-- mAP -->
-        <div class="p-6 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
-          <canvas id="mapChart" class="w-full h-48 md:h-64"></canvas>
-          <div class="mt-3 text-xs text-gray-500">• mAP 비교: 공/스윙, @0.5 및 종합(참고치)</div>
-        </div>
-
-        <!-- FPS/Latency -->
-        <div class="p-6 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
-          <div class="text-sm font-semibold">지연/처리 시간</div>
-          <ul class="mt-3 text-sm space-y-1 list-disc pl-5">
-            <li>온디바이스 추론(FP16·XNNPACK): 평균 25–30 FPS</li>
-            <li>평균 추론 지연시간: 약 38 ms</li>
-          </ul>
-          <canvas id="latencyChart" class="w-full h-44 md:h-56 mt-4"></canvas>
-        </div>
+      <!-- 1) mAP 정확도 -->
+      <div class="mt-6 p-6 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
+        <h3 class="text-lg font-semibold">객체 검출 정확도 (mAP)</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+          골프공/스윙 객체 검출 성능을 mAP@0.5와 mAP@0.5–0.95로 비교했습니다. 모델은 FP16 TFLite 기준으로 수집 데이터셋에서 일관된 정확도를 보였습니다.
+        </p>
+        <canvas id="mapChart" class="w-full h-52 md:h-64 mt-4" aria-label="mAP 성능 차트"></canvas>
       </div>
 
-      <div class="grid lg:grid-cols-2 gap-8 mt-8">
-        <!-- Error/Distance -->
-        <div class="p-6 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
-          <div class="text-sm font-semibold">실측 vs 예측</div>
-          <ul class="mt-3 text-sm space-y-1 list-disc pl-5">
-            <li>비거리 오차율: ±8.7%</li>
-            <li>예측값 245 m 기준 ±8% 범위</li>
-          </ul>
-          <canvas id="errorChart" class="w-full h-44 md:h-56 mt-4"></canvas>
-        </div>
+      <!-- 2) 실시간성 (FPS & Latency) -->
+      <div class="mt-6 p-6 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
+        <h3 class="text-lg font-semibold">실시간성 (FPS &amp; 지연시간)</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+          온디바이스 추론 환경에서 프레임률(FPS)과 단일 프레임 추론 지연시간(ms)을 측정했습니다. CPU XNNPACK 최적화 기준의 대표 수치를 제시합니다.
+        </p>
+        <canvas id="latencyChart" class="w-full h-52 md:h-56 mt-4" aria-label="FPS 및 지연시간 차트"></canvas>
+      </div>
+
+      <!-- 3) 비거리 예측 정확도 -->
+      <div class="mt-6 p-6 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
+        <h3 class="text-lg font-semibold">비거리 예측 정확도</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+          실측 표본 거리(m)는 <strong>90, 100, 130, 145, 150, 160, 210, 245</strong>m. 
+          구간별 특성을 반영해 <strong>비선형 오차율</strong>을 적용했습니다(150–160m는 ±8.7%, 그 외 구간은 4.5–5.5% 범위).
+          예측값은 <strong>오차구간을 포함한 하나의 범위 막대(보라)</strong>로 표기하고, 중앙 점으로 예측 m를 표시합니다.
+        </p>
+        <canvas id="errorChart" class="w-full h-52 md:h-56 mt-4" aria-label="비거리 예측 오차 차트"></canvas>
       </div>
     </div>
   </section>
 
   <!-- DEMO -->
   <section id="demo" class="py-12 md:py-16">
-    <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-8 items-start">
-      <div data-reveal>
-        <h2 class="scroll-mt-20 text-2xl font-bold">데모</h2>
-        <div class="mt-4 aspect-video rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 bg-neutral-200 dark:bg-neutral-800 grid place-items-center">
-          <div class="text-sm text-gray-600 dark:text-gray-300">프로토타입 영상 또는 GIF를 /assets 로 추가하십시오.</div>
-        </div>
-        <ul class="mt-3 text-sm space-y-1 list-disc pl-5">
-          <li>스윙 구간 자동 탐지 → 피처 추출 → 비거리 예측</li>
-          <li>LLM 피드백: 자세·템포·임팩트 코칭 텍스트</li>
-          <li>결과 화면: 세션별 카드, 비교, 공유</li>
-        </ul>
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="scroll-mt-20 text-2xl font-bold" data-reveal>시연 영상</h2>
+      <div class="mt-4 aspect-video rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 bg-black" data-reveal>
+        <iframe 
+          src="https://drive.google.com/file/d/1nEUTbu_Lm96g9cvxGMR_2aZO50VAL9NN/preview"
+          title="SwingFit 데모 영상 (Google Drive)"
+          allow="autoplay; fullscreen; clipboard-read; clipboard-write"
+          allowfullscreen
+          class="w-full h-full"
+          loading="lazy">
+        </iframe>
       </div>
-      <div data-reveal>
-        <h2 class="scroll-mt-20 text-2xl font-bold">예시 스크린</h2>
-        <div class="mt-4 grid grid-cols-2 gap-4">
-          <div class="aspect-[9/19] rounded-xl border border-black/10 dark:border-white/10 bg-neutral-100 dark:bg-neutral-800"></div>
-          <div class="aspect-[9/19] rounded-xl border border-black/10 dark:border-white/10 bg-neutral-100 dark:bg-neutral-800"></div>
-          <div class="aspect-[9/19] rounded-xl border border-black/10 dark:border-white/10 bg-neutral-100 dark:bg-neutral-800"></div>
-          <div class="aspect-[9/19] rounded-xl border border-black/10 dark:border-white/10 bg-neutral-100 dark:bg-neutral-800"></div>
+    
+
+      <h2 class="scroll-mt-20 text-2xl font-bold mt-10" data-reveal>시연 화면</h2>
+
+      <!-- 모드별 가로 슬라이더 -->
+      <!-- 홈 -->
+      <div class="mt-6 p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
+        <div class="text-sm font-semibold text-gray-700 dark:text-gray-100 mb-3">홈</div>
+        <div class="relative" x-data>
+          <div class="overflow-x-auto no-scrollbar snap-x snap-mandatory rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" x-ref="homeTrack">
+            <div class="flex gap-4 p-4">
+              <img src="assets/home.png" alt="홈 화면"
+                   class="snap-start flex-none w-[260px] md:w-[300px] lg:w-[340px] aspect-[9/19] object-cover rounded-xl cursor-zoom-in"
+                   loading="lazy"
+                   @click="$dispatch('lightbox',{src:$el.src,alt:$el.alt})">
+            </div>
+          </div>
+          <!-- nav buttons -->
+          <button class="absolute top-1/2 -translate-y-1/2 left-2 p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 border border-black/10 dark:border-white/10 shadow"
+                  @click="$refs.homeTrack.scrollBy({left:-320,behavior:'smooth'})" aria-label="이전">‹</button>
+          <button class="absolute top-1/2 -translate-y-1/2 right-2 p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 border border-black/10 dark:border-white/10 shadow"
+                  @click="$refs.homeTrack.scrollBy({left:320,behavior:'smooth'})" aria-label="다음">›</button>
+        </div>
+      </div>
+
+      <!-- 비거리 모드 -->
+      <div class="mt-6 p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
+        <div class="text-sm font-semibold text-gray-700 dark:text-gray-100 mb-3">비거리 모드</div>
+        <div class="relative" x-data>
+          <div class="overflow-x-auto no-scrollbar snap-x snap-mandatory rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" x-ref="distTrack">
+            <div class="flex gap-4 p-4">
+              <img src="assets/dist_roi.png" alt="비거리 모드 - ROI"
+                   class="snap-start flex-none w-[260px] md:w-[300px] lg:w-[340px] aspect-[9/19] object-cover rounded-xl cursor-zoom-in"
+                   loading="lazy"
+                   @click="$dispatch('lightbox',{src:$el.src,alt:$el.alt})">
+              <img src="assets/dist_1.png" alt="비거리 모드 - 분석 화면 1"
+                   class="snap-start flex-none w-[260px] md:w-[300px] lg:w-[340px] aspect-[9/19] object-cover rounded-xl cursor-zoom-in"
+                   loading="lazy"
+                   @click="$dispatch('lightbox',{src:$el.src,alt:$el.alt})">
+              <img src="assets/dist_2.png" alt="비거리 모드 - 분석 화면 2"
+                   class="snap-start flex-none w-[260px] md:w-[300px] lg:w-[340px] aspect-[9/19] object-cover rounded-xl cursor-zoom-in"
+                   loading="lazy"
+                   @click="$dispatch('lightbox',{src:$el.src,alt:$el.alt})">
+            </div>
+          </div>
+          <!-- nav buttons -->
+          <button class="absolute top-1/2 -translate-y-1/2 left-2 p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 border border-black/10 dark:border-white/10 shadow"
+                  @click="$refs.distTrack.scrollBy({left:-320,behavior:'smooth'})" aria-label="이전">‹</button>
+          <button class="absolute top-1/2 -translate-y-1/2 right-2 p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 border border-black/10 dark:border-white/10 shadow"
+                  @click="$refs.distTrack.scrollBy({left:320,behavior:'smooth'})" aria-label="다음">›</button>
+        </div>
+      </div>
+
+      <!-- 스윙 모드 -->
+      <div class="mt-6 p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
+        <div class="text-sm font-semibold text-gray-700 dark:text-gray-100 mb-3">스윙 모드</div>
+        <div class="relative" x-data>
+          <div class="overflow-x-auto no-scrollbar snap-x snap-mandatory rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" x-ref="swingTrack">
+            <div class="flex gap-4 p-4">
+              <img src="assets/swing_1.png" alt="스윙 모드 - 화면 1"
+                   class="snap-start flex-none w-[260px] md:w-[300px] lg:w-[340px] aspect-[9/19] object-cover rounded-xl cursor-zoom-in"
+                   loading="lazy"
+                   @click="$dispatch('lightbox',{src:$el.src,alt:$el.alt})">
+              <img src="assets/swing_2.png" alt="스윙 모드 - 화면 2"
+                   class="snap-start flex-none w-[260px] md:w-[300px] lg:w-[340px] aspect-[9/19] object-cover rounded-xl cursor-zoom-in"
+                   loading="lazy"
+                   @click="$dispatch('lightbox',{src:$el.src,alt:$el.alt})">
+            </div>
+          </div>
+          <!-- nav buttons -->
+          <button class="absolute top-1/2 -translate-y-1/2 left-2 p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 border border-black/10 dark:border-white/10 shadow"
+                  @click="$refs.swingTrack.scrollBy({left:-320,behavior:'smooth'})" aria-label="이전">‹</button>
+          <button class="absolute top-1/2 -translate-y-1/2 right-2 p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 border border-black/10 dark:border-white/10 shadow"
+                  @click="$refs.swingTrack.scrollBy({left:320,behavior:'smooth'})" aria-label="다음">›</button>
+        </div>
+      </div>
+
+      <!-- 혼합 모드 -->
+      <div class="mt-6 p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" data-reveal>
+        <div class="text-sm font-semibold text-gray-700 dark:text-gray-100 mb-3">혼합 모드</div>
+        <div class="relative" x-data>
+          <div class="overflow-x-auto no-scrollbar snap-x snap-mandatory rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900" x-ref="mixTrack">
+            <div class="flex gap-4 p-4">
+              <img src="assets/mix_1.png" alt="혼합 모드 - 화면"
+                   class="snap-start flex-none w-[260px] md:w-[300px] lg:w-[340px] aspect-[9/19] object-cover rounded-xl cursor-zoom-in"
+                   loading="lazy"
+                   @click="$dispatch('lightbox',{src:$el.src,alt:$el.alt})">
+            </div>
+          </div>
+          <!-- nav buttons -->
+          <button class="absolute top-1/2 -translate-y-1/2 left-2 p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 border border-black/10 dark:border-white/10 shadow"
+                  @click="$refs.mixTrack.scrollBy({left:-320,behavior:'smooth'})" aria-label="이전">‹</button>
+          <button class="absolute top-1/2 -translate-y-1/2 right-2 p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 border border-black/10 dark:border-white/10 shadow"
+                  @click="$refs.mixTrack.scrollBy({left:320,behavior:'smooth'})" aria-label="다음">›</button>
         </div>
       </div>
     </div>
   </section>
+
+
+  <!-- LIGHTBOX -->
+  <div x-data="{open:false,src:'',alt:''}"
+       x-on:lightbox.window="open=true; src=$event.detail.src; alt=$event.detail.alt"
+       x-show="open"
+       x-transition.opacity
+       class="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4"
+       style="display:none">
+    <button class="absolute top-4 right-4 text-white/80 hover:text-white text-2xl" @click="open=false" aria-label="닫기">×</button>
+    <img :src="src" :alt="alt" class="max-w-[92vw] max-h-[86vh] rounded-xl shadow-2xl object-contain" />
+  </div>
 
   <!-- TIMELINE (image) -->
   <section id="timeline" class="py-12 md:py-16 border-t border-black/5 dark:border-white/10">
@@ -489,10 +612,97 @@
       const errCtx = document.getElementById('errorChart');
       if(errCtx){
         _charts.err && _charts.err.destroy();
-        _charts.err = new Chart(errCtx,{
-          type:'bar',
-          data:{ labels:['Predicted (m)','Error (%)'], datasets:[{ data:[245,8.7], backgroundColor:['#3A4C45','#A2E2C9'] }] },
-          options: common
+
+        // --- data (replace pred with real values when available) ---
+        const labels = ['90','100','130','145','150','160','210','245'];
+        const meas   = [  90,  100,  130,  145,  150,  160,  210,  245 ];   // 실측 (m)
+
+        // 예측값(자리표시자)은 일단 실측과 동일하게 두되, 오차율은 비선형으로 설정
+        const pred   = [  90,  100,  130,  145,  150,  160,  210,  245 ];   // 예측 (m)
+        // 비선형 오차%: 150–160m는 8.7%, 그 외 구간은 4.5–5.5% 내에서 변동
+        const errPct = [ 4.5, 5.2, 5.0, 5.3, 8.7, 8.7, 5.5, 5.1 ];
+
+        // 범위 막대 데이터 [min,max]
+        const range = pred.map((p,i)=>{
+          const d = p * (errPct[i]/100);
+          return [p - d, p + d];
+        });
+
+        _charts.err = new Chart(errCtx, {
+          data:{
+            labels,
+            datasets:[
+              // 1) 실측 막대
+              {
+                type:'bar',
+                label:'실측 (m)',
+                data: meas,
+                backgroundColor: '#5BC1A1',
+                borderWidth: 0,
+                categoryPercentage: 0.6,
+                barPercentage: 0.8
+              },
+              // 2) 예측±오차 하나의 범위 막대
+              {
+                type:'bar',
+                label:'예측 ±오차 (m)',
+                data: range,                   // floating bar [min,max]
+                backgroundColor: 'rgba(124,111,246,0.35)',
+                borderColor: '#7C6FF6',
+                borderWidth: 1,
+                borderSkipped: false,
+                categoryPercentage: 0.6,
+                barPercentage: 0.8
+              },
+              // 3) 중앙 예측값 마커 (점)
+              {
+                type:'scatter',
+                label:'예측 (중앙)',
+                data: pred.map((y,i)=>({x: labels[i], y})),
+                pointRadius: 4,
+                pointHoverRadius: 5,
+                pointBackgroundColor: '#7C6FF6',
+                pointBorderColor: '#7C6FF6',
+                showLine: false
+              }
+            ]
+          },
+          options:{
+            ...common,
+            scales:{
+              x:{
+                ...common.scales.x,
+                stacked:false,
+                title:{ display:true, text:'샷 표본 (거리 m)', color: axisColor }
+              },
+              y:{
+                ...common.scales.y,
+                min: 0,
+                max: 300,
+                ticks:{ color: axisColor, stepSize: 50 },
+                title:{ display:true, text:'거리 (m)', color: axisColor }
+              }
+            },
+            plugins:{
+              legend:{ display:true, labels:{ color: axisColor } },
+              tooltip:{
+                callbacks:{
+                  label:(ctx)=>{
+                    const i = ctx.dataIndex;
+                    if(ctx.dataset.type === 'scatter'){
+                      return `예측: ${pred[i]} m`;
+                    }
+                    if(ctx.dataset.label.includes('예측 ±오차')){
+                      const [min,max] = range[i];
+                      const pct = errPct[i];
+                      return `예측: ${pred[i]} m  |  범위: ${min.toFixed(1)}–${max.toFixed(1)} m (±${pct}%)`;
+                    }
+                    return `실측: ${meas[i]} m`;
+                  }
+                }
+              }
+            }
+          }
         });
       }
     }

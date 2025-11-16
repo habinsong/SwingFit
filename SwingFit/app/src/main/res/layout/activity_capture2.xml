@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootCapture"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextureView
+        android:id="@+id/textureView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/panelControls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="16dp"
+        android:background="#CC000000">
+
+        <LinearLayout
+            android:id="@+id/panelLeft"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvShutter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1/1000"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/tvIso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ISO 200"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:gravity="center" />
+
+            <Button
+                android:id="@+id/btnIsoToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ISO: AUTO"
+                android:textSize="12sp"
+                android:backgroundTint="#444444"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="6dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnRecord"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:backgroundTint="#E53935"
+            android:text=""
+            android:background="@drawable/record_button_circle"
+            android:layout_marginHorizontal="12dp" />
+
+        <LinearLayout
+            android:id="@+id/panelRight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnZoomIn"
+                android:layout_width="144dp"
+                android:layout_height="48dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:text="+"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
+                android:backgroundTint="#444444"
+                android:textColor="@android:color/white" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="8dp" />
+
+            <Button
+                android:id="@+id/btnZoomOut"
+                android:layout_width="144dp"
+                android:layout_height="48dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:text="-"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
+                android:backgroundTint="#444444"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

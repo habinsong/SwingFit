@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <!-- 심볼 아이콘 -->
+    <ImageView
+        android:id="@+id/imgEmpty"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        tools:ignore="ContentDescription" />
+
+    <!-- 메시지 -->
+    <TextView
+        android:id="@+id/tvEmptyMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="아직 기록이 없습니다."
+        android:textColor="#7A7A7A"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        tools:text="아직 기록이 없습니다." />
+
+</LinearLayout>

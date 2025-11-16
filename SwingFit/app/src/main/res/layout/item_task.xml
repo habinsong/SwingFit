@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:minHeight="64dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:background="@android:color/transparent"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <!-- 배지: 홈 그라데이션 톤과 매칭 -->
+    <TextView
+        android:id="@+id/badge"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text=""
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:includeFontPadding="false"
+        android:background="@drawable/bg_badge_gradient_lavender_mint"
+        android:elevation="1dp"/>
+
+    <!-- 우측 액션: 터치 히트박스 + 화살표 표시 -->
+    <LinearLayout
+        android:id="@+id/actions"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:clickable="false"
+        android:focusable="false">
+
+        <TextView
+            android:id="@+id/arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="›"
+            android:textSize="22sp"
+            android:textColor="#9A9A9A"
+            android:includeFontPadding="false"/>
+    </LinearLayout>
+
+    <!-- 텍스트 묶음 -->
+    <LinearLayout
+        android:id="@+id/texts"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/badge"
+        android:layout_toRightOf="@id/badge"
+        android:layout_toStartOf="@id/actions"
+        android:layout_marginStart="12dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:textColor="#222222"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="제목" />
+
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#6B6B6B"
+            android:includeFontPadding="false"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="설명" />
+
+        <!-- 상태 칩 영역: 필요 시 VISIBLE로, 기본은 GONE -->
+        <LinearLayout
+            android:id="@+id/chips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="6dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/chipPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="추천"
+                android:textSize="12sp"
+                android:textColor="#2B6C3D"
+                android:background="@drawable/bg_chip_soft_green"
+                android:includeFontPadding="false"
+                android:layout_marginEnd="6dp"/>
+
+            <TextView
+                android:id="@+id/chipSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="오늘"
+                android:textSize="12sp"
+                android:textColor="#5B4C86"
+                android:background="@drawable/bg_chip_soft_purple"
+                android:includeFontPadding="false"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 하단 진행 라인(옵션): 카드 하단에 살짝 생동감. 필요 없으면 visibility="gone" -->
+    <View
+        android:id="@+id/progressLine"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@id/badge"
+        android:layout_toRightOf="@id/badge"
+        android:layout_toStartOf="@id/actions"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/bg_progress_lavender_mint"
+        android:visibility="gone"/>
+</RelativeLayout>

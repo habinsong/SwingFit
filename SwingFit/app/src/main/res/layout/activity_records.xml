@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".RecordsActivity">
+
+    <!-- 상단 앱바: 툴바 + 탭 -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        app:liftOnScroll="true"
+        android:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarRecords"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            app:title="기록"
+            app:titleCentered="true"
+            app:titleTextColor="@color/black"
+            app:navigationIconTint="@color/black" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayoutRecords"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:tabMode="fixed"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorAnimationMode="elastic"
+            app:tabTextColor="#7A7A7A"
+            app:tabSelectedTextColor="@color/black"
+            app:tabIndicatorColor="#5B4C86" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- 컨텐츠: ViewPager2 (비거리/스윙 프래그먼트) -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerRecords"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!-- 상단 로딩바(필요 시 코드에서 visibility 제어) -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/topProgress"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:visibility="gone"
+        android:indeterminate="true"
+        app:trackThickness="4dp"
+        app:indicatorColor="#5B4C86"
+        app:layout_anchorGravity="top" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

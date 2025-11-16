@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardBallAnalysis"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- 썸네일 -->
+        <ImageView
+            android:id="@+id/imgThumb"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/bg_big_thumb"
+            tools:src="@drawable/ic_launcher_background"/>
+
+        <!-- 텍스트 블록 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/imgThumb"
+            android:layout_marginStart="16dp">
+
+            <!-- 상단 행: 비거리 + 날짜 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="총 비거리: 150m"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    android:textColor="@color/black"
+                    tools:text="총 비거리: 150m"/>
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2025-09-25"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:textColor="#7A7A7A"
+                    tools:text="2025-09-25 21:30"/>
+            </LinearLayout>
+
+            <!-- 캐리/발사각/구속 -->
+            <TextView
+                android:id="@+id/tvCarry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="캐리: 145m"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                tools:text="캐리: 145m"/>
+
+            <TextView
+                android:id="@+id/tvLaunchAngle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="발사각: 18°"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                tools:text="발사각: 18°"/>
+
+            <TextView
+                android:id="@+id/tvBallSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="볼스피드: 50m/s"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                tools:text="볼스피드: 50m/s"/>
+        </LinearLayout>
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

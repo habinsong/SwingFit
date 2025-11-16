@@ -1,0 +1,18 @@
+<resources>
+    <string-array name="club_types">
+        <item>드라이버</item>
+        <item>3번 우드</item>
+        <item>5번 우드</item>
+        <item>3번 아이언</item>
+        <item>4번 아이언</item>
+        <item>5번 아이언</item>
+        <item>6번 아이언</item>
+        <item>7번 아이언</item>
+        <item>8번 아이언</item>
+        <item>9번 아이언</item>
+        <item>피칭 웨지</item>
+        <item>갭 웨지</item>
+        <item>샌드 웨지</item>
+        <item>로브 웨지</item>
+    </string-array>
+</resources>

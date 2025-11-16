@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingVertical="6dp"
+    android:paddingHorizontal="8dp"
+    tools:ignore="UseCompoundDrawables">
+
+    <!-- 사용자 메시지 -->
+    <LinearLayout
+        android:id="@+id/layoutUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:visibility="gone"
+        android:layout_marginVertical="2dp">
+
+        <TextView
+            android:id="@+id/tvUserMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bubble_user"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="10dp"
+            android:maxWidth="0dp"
+            android:layout_weight="0.85"
+            tools:text="내 비거리 늘리는 연습 방법 알려줘" />
+    </LinearLayout>
+
+    <!-- Gemini(assistant) 메시지 -->
+    <LinearLayout
+        android:id="@+id/layoutBot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:visibility="gone"
+        android:layout_marginVertical="2dp">
+
+        <TextView
+            android:id="@+id/tvBotMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bubble_bot"
+            android:textColor="#222222"
+            android:textSize="15sp"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="10dp"
+            android:maxWidth="0dp"
+            android:layout_weight="0.85"
+            tools:text="스매시 팩터를 높이려면 임팩트 순간 에너지 손실을 줄여야 합니다. 클럽헤드 스피드보다 중심 타격이 더 중요합니다." />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Swingfit</string>
+
+
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="club_prompt">클럽 선택</string>
+
+
+    <string name="login_title">로그인</string>
+    <string name="email_hint">이메일</string>
+    <string name="password_hint">비밀번호</string>
+    <string name="login_button">로그인</string>
+    <string name="register_text">회원가입</string>
+    <string name="auto_login_text">자동 로그인</string>
+
+</resources>
